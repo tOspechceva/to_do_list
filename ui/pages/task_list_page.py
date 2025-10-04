@@ -7,10 +7,11 @@ from models.task_manager import delete_task_by_id  # ← добавим эту �
 
 
 class TaskListPage(QWidget):
-    def __init__(self, on_add_task_clicked, on_task_deleted):
+    def __init__(self, on_add_task_clicked, on_task_deleted, on_task_clicked):
         super().__init__()
         self.on_add_task_clicked = on_add_task_clicked
         self.on_task_deleted = on_task_deleted
+        self.on_task_clicked = on_task_clicked  # ← новое
         self.setup_ui()
 
     def setup_ui(self):
@@ -51,22 +52,25 @@ class TaskListPage(QWidget):
 
         self.tasks_layout.addStretch()  # чтобы задачи не растягивались
 
+# В методе create_task_widget в ui/pages/task_list_page.py
+
     def create_task_widget(self, task):
         widget = QFrame()
         widget.setFrameShape(QFrame.Shape.Box)
-        widget.setFrameShadow(QFrame.Shadow.Raised)
         layout = QHBoxLayout()
 
-        # Иконка и текст задачи
+        # Кликабельная область задачи
         status_icon = {"pending": "⏳", "in_progress": "🔄", "completed": "✅"}.get(task.status, "❓")
         deadline_str = task.deadline.strftime("%d.%m.%Y %H:%M") if task.deadline else "нет"
         priority_display = task.get_priority_display()
 
         text = f"<b>{status_icon} {task.title}</b><br>" \
-               f"<small>Дедлайн: {deadline_str} | Приоритет: {priority_display}</small>"
+            f"<small>Дедлайн: {deadline_str} | Приоритет: {priority_display}</small>"
 
         label = QLabel(text)
         label.setTextFormat(Qt.TextFormat.RichText)
+        label.setCursor(Qt.CursorShape.PointingHandCursor)  # курсор как на ссылке
+        label.mousePressEvent = lambda e, t_id=task.id: self.on_task_clicked(t_id)  # ← обработчик клика
 
         # Кнопка удаления
         delete_btn = QPushButton("🗑️ Удалить")
@@ -77,5 +81,4 @@ class TaskListPage(QWidget):
         layout.addWidget(delete_btn)
         layout.setAlignment(delete_btn, Qt.AlignmentFlag.AlignTop)
         widget.setLayout(layout)
-
         return widget
