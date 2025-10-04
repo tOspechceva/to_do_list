@@ -1,11 +1,11 @@
 # ui/main_window.py
 from PyQt6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStackedWidget
+    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStackedWidget,QMessageBox
 )
 from PyQt6.QtCore import QSize
 from ui.pages.add_task_page import AddTaskPage
 from ui.pages.task_list_page import TaskListPage
-from models.task_manager import create_task, get_recent_tasks
+from models.task_manager import create_task, get_recent_tasks,delete_task_by_id
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -16,7 +16,10 @@ class MainWindow(QMainWindow):
         self.stacked_widget = QStackedWidget()
 
         # Создаём страницы
-        self.task_list_page = TaskListPage(on_add_task_clicked=self.go_to_add_page)
+        self.task_list_page = TaskListPage(
+            on_add_task_clicked=self.go_to_add_page,
+            on_task_deleted=self.handle_delete_task
+                                           )
         self.add_task_page = AddTaskPage(on_task_added=self.handle_add_task)
 
         self.stacked_widget.addWidget(self.add_task_page)   # index 0
@@ -60,3 +63,12 @@ class MainWindow(QMainWindow):
             self.go_to_main_page()
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Не удалось сохранить задачу: {e}")
+    
+
+    def handle_delete_task(self, task_id: int):
+        success = delete_task_by_id(task_id)
+        if success:
+            QMessageBox.information(self, "Удалено", "Задача успешно удалена.")
+            self.go_to_main_page()  # обновить список
+        else:
+            QMessageBox.warning(self, "Ошибка", "Не удалось удалить задачу.")
