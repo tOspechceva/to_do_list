@@ -1,4 +1,3 @@
-# config/django_setup.py
 import os
 import sys
 import django

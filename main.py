@@ -1,6 +1,5 @@
-# main.py
 import sys
-from config.django_setup import *  # инициализируем Django
+from config.django_setup import *  
 from ui.main_window import MainWindow
 from PyQt6.QtWidgets import QApplication
 

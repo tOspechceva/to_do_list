@@ -1,4 +1,3 @@
-# ui/pages/add_task_page.py
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QCalendarWidget, QDateTimeEdit,
     QLineEdit, QTextEdit, QPushButton, QLabel

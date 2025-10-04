@@ -1,9 +1,8 @@
-# ui/pages/task_list_page.py
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QScrollArea, QFrame
 )
 from PyQt6.QtCore import Qt
-from models.task_manager import delete_task_by_id  # ← добавим эту функцию позже
+from models.task_manager import delete_task_by_id  
 
 
 class TaskListPage(QWidget):
@@ -11,7 +10,7 @@ class TaskListPage(QWidget):
         super().__init__()
         self.on_add_task_clicked = on_add_task_clicked
         self.on_task_deleted = on_task_deleted
-        self.on_task_clicked = on_task_clicked  # ← новое
+        self.on_task_clicked = on_task_clicked 
         self.setup_ui()
 
     def setup_ui(self):
@@ -52,7 +51,6 @@ class TaskListPage(QWidget):
 
         self.tasks_layout.addStretch()  # чтобы задачи не растягивались
 
-# В методе create_task_widget в ui/pages/task_list_page.py
 
     def create_task_widget(self, task):
         widget = QFrame()
